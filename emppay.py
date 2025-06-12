@@ -24,6 +24,8 @@ def add_employees():
                 print("ID can't be greater than 3 characters.")
             elif not id.isdigit():  #
                 print("ID can only be numbers.")
+            elif any(emp["emp_id"] == int(id) for emp in EMPLOYEES):
+                print("Employee ID already exists.")
             else:
                 new_employee["emp_id"] = int(id)
                 break
@@ -156,37 +158,36 @@ def generate_payslips():
         print("================")
 
 def main():
-    system_on = True
-    while system_on:
-        case = int(input("""
-        \nEmployee Payroll system.
-        \n1. Add Employee.
-        \n2. Apply Bonus
-        \n3. Generate single payslip using ID
-        \n4. Generate Payslips
-        \n5. Exit
-        \n Your choice: """))
-        if case == 1:
-            add_employees()
-        elif case == 2:
-            apply_bonus()
-        elif case == 3:
-            generate_single_payslip()
-        elif case == 4:
-            generate_payslips()
-        elif case == 5:
-            print("Thank you for using EmpPay, see you soon!")
-            system_on = False
-        else:
-            print("Invalid input.")
-        keep_running = input("Would you like to keep using EmpPay, type 'y' for yes and 'n' for no: ").lower()
-        if keep_running == "y":
-            continue
-        elif keep_running == "n":
-            print("Thank you for using EmpPay, see you soon!")
-            system_on = False
-        else:
-            print("Invalid input.")
+    menu_options = {
+        1: add_employees,
+        2: apply_bonus,
+        3: generate_single_payslip,
+        4: generate_payslips,
+        5: None
+    }
+
+    while True:
+        print("""
+        \nEmployee Payroll System
+        1. Add Employee
+        2. Apply Bonus
+        3. Generate Single Payslip (by ID)
+        4. Generate All Payslips
+        5. Exit
+        """)
+
+        try:
+            case = int(input("Your choice: "))
+            if case in menu_options:
+                if case == 5:
+                    print("Thank you for using EmpPay. See you soon!")
+                    break
+                else:
+                    menu_options[case]()
+            else:
+                print("Invalid option. Please choose between 1 and 5.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
 
 
 main()
